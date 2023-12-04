@@ -47,8 +47,9 @@ namespace Config {
   const long ACTION_INTERVAL = 1000; // in milliseconds
   const long SAFETY_INTERVAL = 100;  // in milliseconds
   // Pin assignments
-  const int HEATERPIN = 2;
+  const int LCDPIN = 2;
   const int SAFETYPIN = 3;
   const int RUNINDICATORPIN = 4;
+  const int HEATERPIN = 5;
   const int SLEEPSWITCH = 7;  
  }

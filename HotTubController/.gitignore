@@ -3,6 +3,9 @@
 .vscode/c_cpp_properties.json
 .vscode/launch.json
 .vscode/ipch
-#Exclude logs directory
+# Exclude logs directory
 logs/
 compile_commands.json
+
+# Exclude libre office lock file
+*.~lock*
