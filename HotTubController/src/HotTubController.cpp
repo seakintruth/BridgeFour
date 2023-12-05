@@ -116,19 +116,6 @@ void setup(void) {
 //Exectuion Loop
 void loop(void) {
   //Allways execute
-  if (millis() > 500 ){ // only print to display after it has booted up (500 milliseconds).
-    LCD_Serial.write(254); // move cursor to beginning of first line
-    LCD_Serial.write(128);
-    LCD_Serial.write("TEMP:           "); // clear display
-    LCD_Serial.write("TARGET TEMP:    "); // clear display second line
-    LCD_Serial.write(254); // move cursor to beginning of first line
-    LCD_Serial.write(128);
-    sprintf(_temp_string,"%4d",_emaTemperaturePreHeater); // create strings from the numbers
-    sprintf(_target_string,"%4d",Config::Hi); // right-justify to 4 spaces
-    LCD_Serial.write("Hello, world!");
-  }
-
-
   //TODO: Add checks against DeadMansSwitch
   float readingPreHeater = analogRead(Config::THERMISTORPINPREHEATER);
   float readingPostHeater = analogRead(Config::THERMISTORPINPOSTHEATER);
@@ -200,6 +187,23 @@ void loop(void) {
   if ((long)(currentRunTime - _previousRunTime) > (Config::ACTION_INTERVAL-1)) {
     // I'm alive  indicator...
     digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN)); 
+    // Print out to the LCD    
+    // if (millis() > 500 ){ // only print to display after it has booted up (500 milliseconds).
+      LCD_Serial.write(254); // move cursor to beginning of first line
+      LCD_Serial.write(128);
+      LCD_Serial.write("                "); // clear display
+      LCD_Serial.write("                "); // clear display
+      LCD_Serial.write(254); // move cursor to beginning of first line
+      LCD_Serial.write(128);
+      LCD_Serial.write("TEMP:           "); // clear display
+      LCD_Serial.write("TARGET TEMP:    "); // clear display second line
+      LCD_Serial.write(254); // move cursor to beginning of first line
+      LCD_Serial.write(128);
+      sprintf(_temp_string,"%4d",_emaTemperaturePreHeater); // create strings from the numbers
+      sprintf(_target_string,"%4d",Config::Hi); // right-justify to 4 spaces
+      LCD_Serial.write("Hello, world!");
+      LCD_Serial.write(_temp_string);
+    // }
     // toggle run/saftey indicator if saftey pin has switched
     if (!digitalReadFast(Config::SAFETYPIN)){
       digitalWriteFast(Config::RUNINDICATORPIN, !digitalReadFast(Config::RUNINDICATORPIN)); 
