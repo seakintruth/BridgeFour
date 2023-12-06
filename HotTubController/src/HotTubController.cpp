@@ -18,17 +18,13 @@
     #include "../lib/NaiveLogger/src/naiveLogger.cpp"
   #endif
 #endif
-// For LCD Display use the softwareserial library to create a new "soft" serial port
-// for the display. This prevents display corruption when uploading code.
-#include <SoftwareSerial.h>
-
 // Now using patformio instead of the arduino ide / arduino vscode extention
 // Converting from .ino to a .cpp source file as C++ file...
 // This means that we need to declare each custom function see:
 // https://docs.platformio.org/en/latest/faq/ino-to-cpp.html
 
 
-//----------------------------------------------------------------
+//-------------Hello middle---------------------------------------------------
 // Global variables
 //----------------------------------------------------------------
 // by convention every variable begining with an underscore in this project is a global varaible.
@@ -39,17 +35,15 @@
 unsigned int _heatingStatusRequest ;
 unsigned long _previousRunTime ;
 unsigned long _previousRunCycles ;
-
 bool _isSleep;
 bool _deadManSwitchHoldConnected;
-
-
 float _emaResistancePreHeater;
 float _emaResistancePostHeater;
 float _emaTemperaturePreHeater;
 float _emaTemperaturePostHeater;
 float _emaSafetyPreResistance;
 float _emaSafetyPostResistance;
+
 // consider using a struct for all the temperature measures related to a themistor...
 //struct TempratureMeasures {
 //  float Resistance;
@@ -60,11 +54,6 @@ float _emaSafetyPostResistance;
 //}
 // 
 
-// Setup LCD
-SoftwareSerial LCD_Serial(Config::LCD_PIN_TX,Config::LCD_PIN_RX);
-//create string arrays for the LCD
-char _temp_string[10];
-char _target_string[10];
 
 
 // enable soft reset
@@ -72,9 +61,6 @@ void(* resetFunc) (void) = 0;
 
 // Initilzation
 void setup(void) {
-  // Setup LCD Software Serial 
-  LCD_Serial.begin(9600); // set up serial port for 9600 baud
-
   // Check serial rates at: https://wormfood.net/avrbaudcalc.php
   // Uno typically has a 16Mhz crystal, could use conditional compilation arguments here to optimize for specific boards.
   pinMode(Config::HEATERPIN, OUTPUT);
@@ -115,7 +101,7 @@ void setup(void) {
 
 //Exectuion Loop
 void loop(void) {
-  //Allways execute
+  //Allways eHello middlexecute
   //TODO: Add checks against DeadMansSwitch
   float readingPreHeater = analogRead(Config::THERMISTORPINPREHEATER);
   float readingPostHeater = analogRead(Config::THERMISTORPINPOSTHEATER);
@@ -187,23 +173,7 @@ void loop(void) {
   if ((long)(currentRunTime - _previousRunTime) > (Config::ACTION_INTERVAL-1)) {
     // I'm alive  indicator...
     digitalWriteFast(LED_BUILTIN, !digitalReadFast(LED_BUILTIN)); 
-    // Print out to the LCD    
-    // if (millis() > 500 ){ // only print to display after it has booted up (500 milliseconds).
-      LCD_Serial.write(254); // move cursor to beginning of first line
-      LCD_Serial.write(128);
-      LCD_Serial.write("                "); // clear display
-      LCD_Serial.write("                "); // clear display
-      LCD_Serial.write(254); // move cursor to beginning of first line
-      LCD_Serial.write(128);
-      LCD_Serial.write("TEMP:           "); // clear display
-      LCD_Serial.write("TARGET TEMP:    "); // clear display second line
-      LCD_Serial.write(254); // move cursor to beginning of first line
-      LCD_Serial.write(128);
-      sprintf(_temp_string,"%4d",_emaTemperaturePreHeater); // create strings from the numbers
-      sprintf(_target_string,"%4d",Config::Hi); // right-justify to 4 spaces
-      LCD_Serial.write("Hello, world!");
-      LCD_Serial.write(_temp_string);
-    // }
+
     // toggle run/saftey indicator if saftey pin has switched
     if (!digitalReadFast(Config::SAFETYPIN)){
       digitalWriteFast(Config::RUNINDICATORPIN, !digitalReadFast(Config::RUNINDICATORPIN)); 
